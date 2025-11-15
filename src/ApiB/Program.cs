@@ -10,28 +10,23 @@ public static class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
         builder.Services.AddAuthorization();
-
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers();
 
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowLocalhost5000", policy =>
+            options.AddPolicy("AllowFrontend", policy =>
             {
-                policy.WithOrigins("http://localhost:5000")
+                policy.WithOrigins("http://127.0.0.1:5500")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
-            options.AddPolicy("BlockList", policy => {});
         });
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -39,12 +34,15 @@ public static class Program
         }
 
         app.UseHttpsRedirection();
-        app.UseCors("AllowLocalhost5000");
-        //app.UseCors("AllowLocalhost5000");
-        app.MapControllers();
+
+        // 👇 ***AQUI É O LUGAR CORRETO***
+        app.UseCors("AllowFrontend");
 
         app.UseAuthorization();
 
+        app.MapControllers();
+
         app.Run();
+
     }
 }
