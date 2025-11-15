@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+<button onclick="callApi()">Testar CORS</button>
+<pre id="out"></pre>
+
+<script>
+async function callApi() {
+  try {
+    const res = await fetch("http://localhost:5001/data");
+    document.getElementById("out").innerText = await res.text();
+  } catch (e) {
+    document.getElementById("out").innerText = "Erro CORS: " + e.message;
+  }
+}
+</script>
+</body>
+</html>
